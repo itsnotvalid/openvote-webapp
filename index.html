@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenVote webapp prototype</title>
+</head>
+<body>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+<form id="polling">
+    HKID: <input type="text" id="hkid"/><br/>
+
+    <input type="radio" name="choice" value="1"/>Option 1<br/>
+    <input type="radio" name="choice" value="2"/>Option 2<br/>
+    <input type="radio" name="choice" value="3"/>Option 3<br/>
+    <input type="submit" value="Vote"/><br/>
+</form>
+
+<script>
+<!--
+
+function hash_hkid (hkid) {
+    return CryptoJS.SHA1(CryptoJS.MD5(hkid));
+}
+
+function validate_form() {
+    if ($("input[name=choice]:checked").val() == null) {
+        alert("Not choose yet!");
+        return false;
+    }
+    else if ($("#hkid").val().match(/^[a-zA-Z][0-9]{6,6}\([0-9aA]\)$/)==null) {
+        alert("not valid HKID!");
+        return false;
+    }
+    return true;
+}
+
+$("#polling").submit(function(event){
+    event.preventDefault();
+
+    alert(hash_hkid($("#hkid").val()));
+    if (validate_form()) {
+        var result_hash = hash_hkid($("#hkid").val());
+        var result_text = result_hash.toString(CryptoJS.enc.Hex) + ":" + $(".choice").val();
+
+        $.post("/post", result_text, function () {
+            alert("done");
+        });
+    }
+});
+
+-->
+</script>
+
+</body>
+</html>
