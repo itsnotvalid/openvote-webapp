@@ -1,0 +1,79 @@
+<html ng-app='VoteModule'>
+<head>
+    <title>OpenVote</title>
+</head>
+<body ng-controller='VoteController'>
+<form ng-submit="vote()">
+<input ng-model="hkid">
+<h1>{{issue.vote_title}}</h1>
+<div ng-repeat='item in issue.candidate'>
+    <input type="radio" name="candidate" ng-model="$parent.selectedCandidate" ng-value="item.id">
+    <span>{{$index+1}}</span>
+    <span>{{item.name}}</span>
+    <img ng-src="{{item.avatar}}">
+</div>
+<div>
+    <button ng-click="vote">Vote</button>
+</div>
+</form>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
+<script><!--
+
+    var voteModule = angular.module('VoteModule', []);
+
+    voteModule.controller("VoteController",
+            function ($scope, $http) {
+                $scope.http = $http;
+                $http.get("/candidate.json").success(function(data){
+                    $scope.issue = data;
+                });
+                $scope.selectedCandidate = "0";
+                $scope.vote = function() {
+                    alert($scope.hkid + " is voting to " + $scope.selectedCandidate);
+                    var result_hash = hash_hkid($scope.hkid);
+                    var result_text = result_hash.toString(CryptoJS.enc.Hex) + ":" + $scope.selectedCandidate;
+
+                    $http.post("/post", result_text).success(function(){
+                        alert($scope.hkid + " voted to " + $scope.selectedCandidate);
+                    });
+                }
+                $scope.hkid="";
+            }
+    );
+
+    function hash_hkid (hkid) {
+        return CryptoJS.SHA1(CryptoJS.MD5(hkid));
+    }
+
+    /*
+    function validate_form() {
+        if ($("input[name=choice]:checked").val() == null) {
+            alert("Not choose yet!");
+            return false;
+        }
+        else if ($("#hkid").val().match(/^[a-zA-Z][0-9]{6,6}\([0-9aA]\)$/)==null) {
+            alert("not valid HKID!");
+            return false;
+        }
+        return true;
+    }
+
+    $("#polling").submit(function(event){
+        alert(hash_hkid($("#hkid").val()));
+        if (validate_form()) {
+            var result_hash = hash_hkid($("#hkid").val());
+            var result_text = result_hash.toString(CryptoJS.enc.Hex) + ":" + $(".choice").val();
+
+            $.post("/post", result_text, function () {
+                alert("done");
+            });
+        }
+    });
+    */
+
+//-->
+</script>
+</body>
+</html>
